@@ -32,8 +32,10 @@ public class UserServiceTest {
 
     @Test
     public void 비밀번호가_짧을_때_예외가_발생한다() {
+        // given
         String shortPassword = "short";
 
+        // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> {
             userService.validateNewPassword(shortPassword);
         });
@@ -43,8 +45,10 @@ public class UserServiceTest {
 
     @Test
     public void 비밀번호에_숫자가_포함되지_않을_때_예외가_발생한다() {
+        // given
         String noNumberPassword = "Password";
 
+        // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> {
             userService.validateNewPassword(noNumberPassword);
         });
@@ -54,8 +58,10 @@ public class UserServiceTest {
 
     @Test
     public void 비밀번호에_대문자가_포함되지_않을_때_예외가_발생한다() {
+        // given
         String noUppercasePassword = "password1";
 
+        // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> {
             userService.validateNewPassword(noUppercasePassword);
         });
@@ -65,8 +71,23 @@ public class UserServiceTest {
 
     @Test
     public void 유효한_비밀번호일_때_예외가_발생하지_않는다() {
+        // given
         String validPassword = "Valid1Password";
 
+        // when & then
         assertDoesNotThrow(() -> userService.validateNewPassword(validPassword));
+    }
+
+    @Test
+    public void 유저_정보_조회시_유저가_존재하지_않을_때_예외가_발생한다() {
+        // given
+        long userId = 2L; // 존재하지 않는 ID
+
+        // when & then
+        InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> {
+            userService.getUser(userId);
+        });
+
+        assertEquals("User not found", exception.getMessage());
     }
 }
